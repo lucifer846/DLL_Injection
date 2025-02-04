@@ -37,25 +37,25 @@ int main(int argc, char* argv[]) {
 		printf("wrote bytes to Process memory\n");
 	}
 
-		hKernel32 = GetModuleHandleW(L"Kernel32");
-		if (hKernel32 == NULL) { printf("failed to get handle to dll: %ld\n", GetLastError()); CloseHandle(hProcess); return EXIT_FAILURE; }
-		printf("got 0x%p handle to dll\n", hKernel32);
+	hKernel32 = GetModuleHandleW(L"Kernel32");
+	if (hKernel32 == NULL) { printf("failed to get handle to dll: %ld\n", GetLastError()); CloseHandle(hProcess); return EXIT_FAILURE; }
+	printf("got 0x%p handle to dll\n", hKernel32);
 
-		LPTHREAD_START_ROUTINE startThis = (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryW");
-		printf("got the address to the LoadLibraryW() ---> 0x%p\n", startThis);
+	LPTHREAD_START_ROUTINE startThis = (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryW");
+	printf("got the address to the LoadLibraryW() ---> 0x%p\n", startThis);
 
-		hThread = CreateRemoteThread(hProcess, NULL, 0, startThis, rBuffer, 0, &TID);
-		if (hThread == NULL) { printf("Problem in Opening Thread, %ld\n", GetLastError()); CloseHandle(hProcess); return EXIT_FAILURE; }
-		printf("got 0x%p handle to thread (%ld)\n", hThread, PID);
+	hThread = CreateRemoteThread(hProcess, NULL, 0, startThis, rBuffer, 0, &TID);
+	if (hThread == NULL) { printf("Problem in Opening Thread, %ld\n", GetLastError()); CloseHandle(hProcess); return EXIT_FAILURE; }
+	printf("got 0x%p handle to thread (%ld)\n", hThread, PID);
 
-		printf("waiting for the thread to finist executing\n");
-		WaitForSingleObject(hThread, INFINITE);
-		printf("Thread Finished executing\n");
+	printf("waiting for the thread to finist executing\n");
+	WaitForSingleObject(hThread, INFINITE);
+	printf("Thread Finished executing\n");
 
-		CloseHandle(hThread);
-		CloseHandle(hProcess);
+	CloseHandle(hThread);
+	CloseHandle(hProcess);
 
-		printf("-------finished :)--------");
+	printf("-------finished :)--------");
 
 
 		return EXIT_SUCCESS;
